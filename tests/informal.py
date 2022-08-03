@@ -9,7 +9,6 @@ from orm2pydantic.sqla import from_sqla
 
 
 ORMBase = declarative_base()
-engine = create_engine("sqlite://")
 
 
 def default_factory() -> str: return '1'
@@ -65,11 +64,12 @@ class Address(AbstractBase):
 
 
 def main_test() -> None:
+    engine = create_engine("sqlite://")
     AbstractBase.metadata.create_all(engine)
 
-    from_sqla(StateProvince)
-    from_sqla(City)
-    from_sqla(Street)
+    _PydanticStateProvince = from_sqla(StateProvince)
+    _PydanticCity = from_sqla(City)
+    _PydanticStreet = from_sqla(Street)
     _PydanticAddress = from_sqla(Address)
 
     with Session(engine) as session:

@@ -54,7 +54,7 @@ def from_sqla(db_model: Type[DeclarativeMeta], incl_many_to_one: bool = True, in
               config: Type[BaseConfig] = OrmConfig, exclude: Container[str] = (),
               add_fields: dict[str, FieldDef] = None):
     assert isinstance(db_model, DeclarativeMeta)
-    assert not (incl_one_to_many and incl_many_to_one)
+    assert not (incl_one_to_many and incl_many_to_one), "Pydantic is unable to handle the circular relationship"
     fields = {}
     for attr in inspect(db_model).attrs:
         if attr.key in exclude:
