@@ -1,3 +1,23 @@
+__author__ = "Daniil Fajnberg"
+__copyright__ = "Copyright © 2022 Daniil Fajnberg"
+__license__ = """GNU LGPLv3.0
+
+This file is part of orm2pydantic.
+
+orm2pydantic is free software: you can redistribute it and/or modify it under the terms of
+version 3.0 of the GNU Lesser General Public License as published by the Free Software Foundation.
+
+orm2pydantic is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with orm2pydantic. 
+If not, see <https://www.gnu.org/licenses/>."""
+
+__doc__ = """
+Functions for turning SQLAlchemy objects into corresponding Pydantic objects.
+"""
+
 from typing import Container, Type
 
 from pydantic import create_model, BaseConfig, BaseModel, Field
