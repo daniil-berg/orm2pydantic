@@ -17,8 +17,6 @@ def default_factory() -> str: return '1'
 class AbstractBase(ORMBase):
     __abstract__ = True
 
-    NON_REPR_FIELDS = ['id', 'date_created', 'date_updated']
-
     date_created = Column(TIMESTAMP(timezone=False), server_default=db_now())
     date_updated = Column(TIMESTAMP(timezone=False), server_default=db_now(), onupdate=db_now())
 
@@ -37,7 +35,7 @@ class City(AbstractBase):
     __tablename__ = 'city'
 
     id = Column(Integer, primary_key=True)
-    state_province_id = Column(Integer, FKey('state_province.id', ondelete='RESTRICT'), index=True)
+    state_province_id = Column(Integer, FKey('state_province.id', ondelete='RESTRICT'), nullable=False, index=True)
     zip_code = Column(String(5), nullable=False, index=True)
     name = Column(Unicode(255), nullable=False, index=True)
 
@@ -48,7 +46,7 @@ class Street(AbstractBase):
     __tablename__ = 'street'
 
     id = Column(Integer, primary_key=True)
-    city_id = Column(Integer, FKey('city.id', ondelete='RESTRICT'), index=True)
+    city_id = Column(Integer, FKey('city.id', ondelete='RESTRICT'), nullable=False, index=True)
     name = Column(Unicode(255), nullable=False, index=True)
 
     addresses = relationship('Address', backref='street', lazy='selectin')
@@ -58,7 +56,7 @@ class Address(AbstractBase):
     __tablename__ = 'address'
 
     id = Column(Integer, primary_key=True)
-    street_id = Column(Integer, FKey('street.id', ondelete='RESTRICT'), index=True)
+    street_id = Column(Integer, FKey('street.id', ondelete='RESTRICT'), nullable=False, index=True)
     house_number = Column(String(8), nullable=False, default=default_factory)
     supplement = Column(String(255))
 
@@ -67,9 +65,9 @@ def main_test() -> None:
     engine = create_engine("sqlite://")
     AbstractBase.metadata.create_all(engine)
 
-    _PydanticStateProvince = from_sqla(StateProvince)
-    _PydanticCity = from_sqla(City)
-    _PydanticStreet = from_sqla(Street)
+    _PydanticStateProvince = from_sqla(StateProvince, exclude=['cities'])
+    _PydanticCity = from_sqla(City, exclude=['streets'])
+    _PydanticStreet = from_sqla(Street, exclude=['addresses'])
     _PydanticAddress = from_sqla(Address)
 
     with Session(engine) as session:
