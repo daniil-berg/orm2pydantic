@@ -5,7 +5,7 @@ from sqlalchemy.sql.functions import now as db_now
 from sqlalchemy.sql.schema import Column, ForeignKey as FKey
 from sqlalchemy.sql.sqltypes import Integer, String, TIMESTAMP, Unicode
 
-from orm2pydantic.sqla import from_sqla
+from orm2pydantic.sqla import sqla2pydantic
 
 
 ORMBase = declarative_base()
@@ -65,10 +65,10 @@ def main_test() -> None:
     engine = create_engine("sqlite://")
     AbstractBase.metadata.create_all(engine)
 
-    _PydanticStateProvince = from_sqla(StateProvince, exclude=['cities'])
-    _PydanticCity = from_sqla(City, exclude=['streets'])
-    _PydanticStreet = from_sqla(Street, exclude=['addresses'])
-    _PydanticAddress = from_sqla(Address)
+    _PydanticStateProvince = sqla2pydantic(StateProvince, exclude=['cities'])
+    _PydanticCity = sqla2pydantic(City, exclude=['streets'])
+    _PydanticStreet = sqla2pydantic(Street, exclude=['addresses'])
+    _PydanticAddress = sqla2pydantic(Address)
 
     with Session(engine) as session:
         bavaria = StateProvince(country="de", name="Bavaria")

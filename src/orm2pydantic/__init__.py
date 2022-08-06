@@ -1,1 +1,1 @@
-from .sqla import from_sqla
+from .sqla import sqla2pydantic

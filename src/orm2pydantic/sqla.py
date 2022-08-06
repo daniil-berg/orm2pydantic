@@ -34,7 +34,7 @@ from .utils import resolve_dotted_path
 __all__ = [
     'field_from_column',
     'field_from_relationship',
-    'from_sqla'
+    'sqla2pydantic'
 ]
 
 
@@ -104,9 +104,9 @@ def field_from_relationship(rel_prop: RelationshipProperty) -> FieldDef:
         return list[rel_prop.mapper.class_.__name__], Field(default=None)
 
 
-def from_sqla(db_model: Type[DeclarativeMeta], config: Type[BaseConfig] = OrmConfig, exclude: Container[str] = (),
-              incl_relationships: bool = True, add_fields: dict[str, FieldDef] = None,
-              add_local_ns: dict[str, BaseModel] = None):
+def sqla2pydantic(db_model: Type[DeclarativeMeta], config: Type[BaseConfig] = OrmConfig, exclude: Container[str] = (),
+                  incl_relationships: bool = True, add_fields: dict[str, FieldDef] = None,
+                  add_local_ns: dict[str, BaseModel] = None):
     """
     Takes an SQLAlchemy ORM model class and returns a matching Pydantic model class.
 
