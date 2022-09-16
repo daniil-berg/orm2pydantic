@@ -74,13 +74,17 @@ def field_from_column(col_prop: ColumnProperty) -> FieldDef:
         if default.is_scalar:
             field_info = Field(default=default.arg)
         else:
-            assert callable(default.arg)
-            dotted_path = default.arg.__module__ + '.' + default.arg.__name__
-            factory = resolve_dotted_path(dotted_path)
-            assert callable(factory)
-            field_info = Field(default_factory=factory)
+            try:
+                assert callable(default.arg)
+                dotted_path = default.arg.__module__ + '.' + default.arg.__name__
+                factory = resolve_dotted_path(dotted_path)
+                assert callable(factory)
+                field_info = Field(default_factory=factory)
+            except AssertionError:
+                field_info = Field(default=...)
     else:
         field_info = Field(default=default)
+    field_info.description = column.doc
     return field_type, field_info
 
 
